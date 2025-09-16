@@ -1,102 +1,162 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
-  
-  export let accept = '';
-  export let multiple = false;
-  export let disabled = false;
-  export let maxSize = 10 * 1024 * 1024; // 10MB default
-  export let dragActive = false;
+	import { createEventDispatcher } from 'svelte';
+	import { formatFileSize, getFileIcon, validateFileType } from '$lib/utils/fileUtils';
+	import Button from './Button.svelte';
 
-  const dispatch = createEventDispatcher<{
-    files: { files: FileList };
-    error: { message: string };
-  }>();
+	export let acceptedTypes: string;
+	export let multiple = false;
+	export let maxFiles = 10;
+	export let title = 'Cargar archivos';
+	export let description = 'Arrastra y suelta archivos aquí o haz clic para seleccionar';
+	export let files: File[] = [];
 
-  let fileInput: HTMLInputElement;
+	const dispatch = createEventDispatcher<{
+		filesChanged: File[];
+		filesAdded: File[];
+		fileRemoved: { file: File; index: number };
+	}>();
 
-  function handleDragOver(e: DragEvent) {
-    e.preventDefault();
-    if (!disabled) dragActive = true;
-  }
+	let isDragOver = false;
+	let fileInput: HTMLInputElement;
+	let errors: string[] = [];
 
-  function handleDragLeave(e: DragEvent) {
-    e.preventDefault();
-    dragActive = false;
-  }
+	function handleDragOver(event: DragEvent) {
+		event.preventDefault();
+		isDragOver = true;
+	}
 
-  function handleDrop(e: DragEvent) {
-    e.preventDefault();
-    dragActive = false;
-    
-    if (disabled) return;
+	function handleDragLeave(event: DragEvent) {
+		event.preventDefault();
+		isDragOver = false;
+	}
 
-    const files = e.dataTransfer?.files;
-    if (files) {
-      validateAndDispatchFiles(files);
-    }
-  }
+	function handleDrop(event: DragEvent) {
+		event.preventDefault();
+		isDragOver = false;
 
-  function handleFileSelect(e: Event) {
-    const target = e.target as HTMLInputElement;
-    if (target.files) {
-      validateAndDispatchFiles(target.files);
-    }
-  }
+		const droppedFiles = Array.from(event.dataTransfer?.files || []);
+		addFiles(droppedFiles);
+	}
 
-  function validateAndDispatchFiles(files: FileList) {
-    for (let file of Array.from(files)) {
-      if (file.size > maxSize) {
-        dispatch('error', { message: `El archivo ${file.name} excede el tamaño máximo permitido` });
-        return;
-      }
-    }
-    dispatch('files', { files });
-  }
+	function handleFileInput(event: Event) {
+		const input = event.target as HTMLInputElement;
+		const selectedFiles = Array.from(input.files || []);
+		addFiles(selectedFiles);
+		input.value = ''; // Reset input
+	}
 
-  function openFileDialog() {
-    if (!disabled) {
-      fileInput.click();
-    }
-  }
+	function addFiles(newFiles: File[]) {
+		errors = [];
+		const validFiles: File[] = [];
+
+		for (const file of newFiles) {
+			// Validar tipo de archivo
+			if (!validateFileType(file, acceptedTypes)) {
+				errors.push(`${file.name}: Tipo de archivo no válido`);
+				continue;
+			}
+
+			// Validar límite de archivos
+			if (files.length + validFiles.length >= maxFiles) {
+				errors.push(`Máximo ${maxFiles} archivos permitidos`);
+				break;
+			}
+
+			// Validar archivos duplicados
+			if (files.find((f) => f.name === file.name && f.size === file.size)) {
+				errors.push(`${file.name}: Archivo duplicado`);
+				continue;
+			}
+
+			validFiles.push(file);
+		}
+
+		if (validFiles.length > 0) {
+			if (multiple) {
+				files = [...files, ...validFiles];
+			} else {
+				files = [validFiles[0]];
+			}
+
+			dispatch('filesChanged', files);
+			dispatch('filesAdded', validFiles);
+		}
+
+		if (errors.length > 0) {
+			alert(errors.join('\n'));
+		}
+	}
+
+	function removeFile(index: number) {
+		const removedFile = files[index];
+		files = files.filter((_, i) => i !== index);
+		dispatch('filesChanged', files);
+		dispatch('fileRemoved', { file: removedFile, index });
+	}
+
+	function openFileDialog() {
+		fileInput.click();
+	}
 </script>
 
-<div
-  class="border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer
-         {dragActive ? 'border-blue-400 bg-blue-50' : 'border-gray-300'}
-         {disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-blue-400 hover:bg-gray-50'}"
-  on:dragover={handleDragOver}
-  on:dragleave={handleDragLeave}
-  on:drop={handleDrop}
-  on:click={openFileDialog}
-  on:keydown={(e) => e.key === 'Enter' && openFileDialog()}
-  role="button"
-  tabindex="0"
->
-  <input
-    bind:this={fileInput}
-    type="file"
-    {accept}
-    {multiple}
-    {disabled}
-    class="hidden"
-    on:change={handleFileSelect}
-  />
-  
-  <div class="space-y-4">
-    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-      <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-    </svg>
-    
-    <div>
-      <p class="text-sm text-gray-600">
-        <span class="font-medium text-blue-600 hover:text-blue-500">Haz clic para subir</span>
-        o arrastra y suelta
-      </p>
-      <p class="text-xs text-gray-500 mt-1">
-        <slot name="description">
-          {accept ? `Archivos: ${accept}` : 'Cualquier archivo'}
-        </slot>
-      </p>
-    </div>
-  </div>
+<div class="w-full">
+	<!-- Área de arrastrar y soltar -->
+	<div
+		class="
+      relative cursor-pointer rounded-lg border-2 border-dashed p-8 text-center transition-colors duration-200
+      {isDragOver ? 'border-blue-400 bg-blue-50' : 'border-gray-300 hover:border-gray-400'}
+    "
+		on:dragover={handleDragOver}
+		on:dragleave={handleDragLeave}
+		on:drop={handleDrop}
+		on:click={openFileDialog}
+		role="button"
+		tabindex="0"
+		on:keydown={(e) => e.key === 'Enter' && openFileDialog()}
+	>
+		<div class="flex flex-col items-center space-y-4">
+			<div class="text-4xl">📁</div>
+			<div>
+				<h3 class="text-lg font-semibold text-gray-900">{title}</h3>
+				<p class="mt-1 text-sm text-gray-600">{description}</p>
+				<p class="mt-2 text-xs text-gray-500">
+					Tipos permitidos: {acceptedTypes}
+				</p>
+			</div>
+			<Button variant="secondary">Seleccionar archivos</Button>
+		</div>
+	</div>
+
+	<!-- Input oculto -->
+	<input
+		bind:this={fileInput}
+		type="file"
+		accept={acceptedTypes}
+		{multiple}
+		class="hidden"
+		on:change={handleFileInput}
+	/>
+
+	<!-- Lista de archivos -->
+	{#if files.length > 0}
+		<div class="mt-6">
+			<h4 class="mb-3 text-sm font-medium text-gray-900">
+				Archivos seleccionados ({files.length})
+			</h4>
+			<div class="space-y-2">
+				{#each files as file, index}
+					<div class="flex items-center justify-between rounded-lg bg-gray-50 p-3">
+						<div class="flex items-center space-x-3">
+							<span class="text-lg">{getFileIcon(file.name)}</span>
+							<div class="flex-1">
+								<p class="text-sm font-medium text-gray-900">{file.name}</p>
+								<p class="text-xs text-gray-600">{formatFileSize(file.size)}</p>
+							</div>
+						</div>
+						<Button variant="danger" size="sm" on:click={() => removeFile(index)}>🗑️</Button>
+					</div>
+				{/each}
+			</div>
+		</div>
+	{/if}
 </div>

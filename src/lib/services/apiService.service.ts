@@ -1,42 +1,121 @@
-import type { OcrEngine, TemplateUploadResponse } from "$lib/interfaces/api.interface";
+// src/lib/services/api.ts
+import { ENDPOINTS } from '$lib/constants';
+import type { TemplateResponse } from '$lib/interfaces/api.interface.js';
 
-const API_BASE_URL = 'http://127.0.0.1:8000';
+const getEnvVariable = (key: string): string => {
+	const value = import.meta.env[key];
+	if (!value) {
+		throw new Error(`La variable de entorno ${key} no está definida`);
+	}
+	return value;
+};
 
-export class ApiService {
-  static async uploadTemplate(file: File): Promise<TemplateUploadResponse> {
-    const formData = new FormData();
-    formData.append('file', file);
+const API_BASE_URL = getEnvVariable('VITE_API_BASE_URL');
 
-    const response = await fetch(`${API_BASE_URL}/upload-template/`, {
-      method: 'POST',
-      body: formData,
-    });
+class ApiService {
+	private baseUrl = API_BASE_URL;
 
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
+	async uploadTemplate(file: File): Promise<TemplateResponse> {
+		const formData = new FormData();
+		formData.append('file', file);
 
-    return response.json();
-  }
+		const response = await fetch(`${this.baseUrl}${ENDPOINTS.UPLOAD_TEMPLATE}`, {
+			method: 'POST',
+			body: formData
+		});
 
-  static async processInvoices(files: File[], ocrEngine: OcrEngine): Promise<Blob> {
-    const formData = new FormData();
-    formData.append('ocr_engine', ocrEngine);
-    
-    files.forEach((file) => {
-      formData.append('file', file);
-    });
+		if (!response.ok) {
+			throw new Error(`Error al cargar plantilla: ${response.statusText}`);
+		}
 
-    const response = await fetch(`${API_BASE_URL}/process-invoice/`, {
-      method: 'POST',
-      body: formData,
-    });
+		return response.json();
+	}
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Error ${response.status}: ${errorText}`);
-    }
+	async processInvoices(files: File[], ocrEngine: 'easyocr' | 'gemini'): Promise<Blob> {
+		const formData = new FormData();
+		formData.append('ocr_engine', ocrEngine);
 
-    return response.blob();
-  }
+		// Agregar todos los archivos
+		files.forEach((file) => {
+			formData.append('file', file);
+		});
+
+		const response = await fetch(`${this.baseUrl}${ENDPOINTS.PROCESS_INVOICE}`, {
+			method: 'POST',
+			body: formData
+		});
+
+		if (!response.ok) {
+			const errorText = await response.text();
+			throw new Error(`Error al procesar facturas: ${errorText}`);
+		}
+
+		return response.blob();
+	}
+
+	// Método para procesar archivos uno por uno con callback de progreso
+	// async processInvoicesWithProgress(
+	// 	files: File[],
+	// 	ocrEngine: 'easyocr' | 'gemini',
+	// 	onProgress: (progress: number, currentFile: string) => void
+	// ): Promise<Blob[]> {
+	// 	const results: Blob[] = [];
+
+	// 	for (let i = 0; i < files.length; i++) {
+	// 		const file = files[i];
+	// 		onProgress((i / files.length) * 100, file.name);
+
+	// 		const formData = new FormData();
+	// 		// formData.append('ocr_engine', ocrEngine);
+	// 		formData.append('file', file);
+
+	// 		const response = await fetch(`${this.baseUrl}${ENDPOINTS.PROCESS_INVOICE}`, {
+	// 			method: 'POST',
+	// 			body: formData
+	// 		});
+
+	// 		if (!response.ok) {
+	// 			const errorText = await response.text();
+	// 			throw new Error(`Error procesando ${file.name}: ${errorText}`);
+	// 		}
+
+	// 		results.push(await response.blob());
+	// 	}
+
+	// 	onProgress(100, '');
+	// 	return results;
+	// }
+	async processInvoicesWithProgress(
+		files: File[],
+		ocrEngine: 'easyocr' | 'gemini',
+		onProgress: (progress: number, currentFile: string) => void
+	): Promise<Blob> {
+		onProgress(0, 'Subiendo archivos...');
+
+		const formData = new FormData();
+		// formData.append('ocr_engine', ocrEngine);
+
+		// Adjuntar todos los archivos como "files[]"
+		for (let i = 0; i < files.length; i++) {
+			const file = files[i];
+			formData.append('files[]', file);
+			// opcional: callback de progreso
+			onProgress(((i + 1) / files.length) * 100, file.name);
+		}
+
+		const response = await fetch(`${this.baseUrl}${ENDPOINTS.PROCESS_INVOICE}`, {
+			method: 'POST',
+			body: formData
+		});
+
+		if (!response.ok) {
+			const errorText = await response.text();
+			throw new Error(`Error procesando facturas: ${errorText}`);
+		}
+
+		onProgress(100, 'Completado');
+		return await response.blob();
+	}
 }
+
+export const apiService = new ApiService();
