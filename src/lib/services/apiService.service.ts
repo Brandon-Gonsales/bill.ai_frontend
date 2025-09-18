@@ -90,18 +90,22 @@ class ApiService {
 		ocrEngine: 'easyocr' | 'gemini',
 		onProgress: (progress: number, currentFile: string) => void
 	): Promise<Blob> {
-		onProgress(0, 'Subiendo archivos...');
+		onProgress(0, 'Preparando archivos...');
 
 		const formData = new FormData();
-		// formData.append('ocr_engine', ocrEngine);
 
-		// Adjuntar todos los archivos como "files[]"
+		// CAMBIO: Usar "files" en lugar de "files[]" para que coincida con el endpoint
+		// que espera files: List[UploadFile] = File(...)
 		for (let i = 0; i < files.length; i++) {
 			const file = files[i];
-			formData.append('files[]', file);
-			// opcional: callback de progreso
-			onProgress(((i + 1) / files.length) * 100, file.name);
+			formData.append('files', file); // Cambio aquí: "files" sin []
+
+			// Actualizar progreso de preparación
+			const prepProgress = ((i + 1) / files.length) * 30; // 30% para preparación
+			onProgress(prepProgress, `Preparando ${file.name}...`);
 		}
+
+		onProgress(40, 'Enviando archivos al servidor...');
 
 		const response = await fetch(`${this.baseUrl}${ENDPOINTS.PROCESS_INVOICE}`, {
 			method: 'POST',
@@ -113,8 +117,11 @@ class ApiService {
 			throw new Error(`Error procesando facturas: ${errorText}`);
 		}
 
+		onProgress(90, 'Descargando resultado...');
+		const blob = await response.blob();
+
 		onProgress(100, 'Completado');
-		return await response.blob();
+		return blob;
 	}
 }
 
