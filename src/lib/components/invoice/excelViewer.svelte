@@ -3,7 +3,7 @@
 	import { templateStore } from "$lib/stores/templateStore";
 	import { addToast } from "$lib/stores/toastStore";
 	import Button from "../ui/Button.svelte";
-	import Card from "../ui/Card.svelte";
+	import Card from "../ui/card.svelte";
 	import FileUpload from "../ui/FileUpload.svelte";
 
   

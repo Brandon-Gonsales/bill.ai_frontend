@@ -1,6 +1,6 @@
 <!-- src/lib/components/features/TemplateUpload.svelte -->
 <script lang="ts">
-	import Card from '../ui/Card.svelte';
+	import Card from '../ui/card.svelte';
 	import FileUpload from '../ui/FileUpload.svelte';
 	import Button from '../ui/Button.svelte';
 

@@ -3,7 +3,7 @@
 	import { ACCEPTED_FILE_TYPES, OCR_ENGINES } from '$lib/constants';
 	import { apiService } from '$lib/services/apiService.service';
 	import ProgressBar from '../ui/progressBar.svelte';
-	import Card from '../ui/Card.svelte';
+	import Card from '../ui/card.svelte';
 	import Select from '../ui/select.svelte';
 	import FileUpload from '../ui/FileUpload.svelte';
 	import Button from '../ui/Button.svelte';

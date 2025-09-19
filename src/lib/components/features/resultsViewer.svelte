@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Card from '../ui/Card.svelte';
+	import Card from '../ui/card.svelte';
 	import Button from '../ui/Button.svelte';
 	import { appStore } from '../../stores/appStore.js';
 	import { downloadBlob } from '$lib/utils/fileUtils';
