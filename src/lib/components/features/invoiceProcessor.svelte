@@ -20,8 +20,8 @@
 		appStore.setCurrentStep('processing');
 
 		try {
-			// Procesar archivos con callback de progreso
-			const results = await apiService.processInvoicesWithProgress(
+			// CAMBIO: El método ahora devuelve un solo Blob (archivo Excel), no un array
+			const resultBlob = await apiService.processInvoicesWithProgress(
 				invoiceFiles,
 				selectedOcrEngine,
 				(progress, currentFile) => {
@@ -29,11 +29,16 @@
 				}
 			);
 
-			// Por ahora tomamos el último resultado (en el futuro podrías combinar múltiples)
-			const finalResult = results[results.length - 1];
-
 			processingStore.finishProcessing();
-			appStore.setProcessedData(finalResult);
+
+			// CAMBIO: Manejar el resultado como un solo archivo Excel
+			// Opción 1: Descargar automáticamente el archivo
+			downloadExcelFile(resultBlob);
+
+			// Opción 2: O almacenar el blob para uso posterior
+			// appStore.setProcessedData(resultBlob);
+
+			appStore.setCurrentStep('results'); // O el paso que corresponda
 		} catch (error) {
 			alert(
 				`Error al procesar facturas: ${error instanceof Error ? error.message : 'Error desconocido'}`
@@ -41,6 +46,21 @@
 			processingStore.reset();
 			appStore.setCurrentStep('upload');
 		}
+	}
+
+	function downloadExcelFile(blob: Blob) {
+		const url = window.URL.createObjectURL(blob);
+		const link = document.createElement('a');
+		link.href = url;
+
+		// Generar nombre de archivo con timestamp
+		const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+		link.download = `processed_invoices_${timestamp}.xlsx`;
+
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+		window.URL.revokeObjectURL(url);
 	}
 
 	function handleFilesChanged(event: CustomEvent<File[]>) {
@@ -69,18 +89,6 @@
 	{/if}
 
 	<div class="space-y-6">
-		<!-- Selector de motor OCR -->
-		<div>
-			<label class="mb-2 block text-sm font-medium text-gray-700"> Motor OCR </label>
-			<select name="" id="">
-				<option value="" disabled>Selecciona un motor OCR</option>
-				{#each OCR_ENGINES as option}
-					<option value={option.value}>{option.label}</option>
-				{/each}
-			</select>
-		</div>
-
-		<!-- Carga de archivos -->
 		<FileUpload
 			acceptedTypes={ACCEPTED_FILE_TYPES.INVOICE}
 			multiple={true}
