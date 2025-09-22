@@ -1,7 +1,6 @@
-<!-- src/lib/components/layout/Header.svelte -->
 <script lang="ts">
-	import { appStore } from '../../stores/appStore.js';
-	import Button from '../ui/Button.svelte';
+	import { appStore } from '$lib/stores/appStore.js';
+	import Button from '$lib/components/ui/button.svelte';
 
 	function resetApp() {
 		if (confirm('¿Estás seguro de que quieres reiniciar el proceso?')) {
