@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { formatFileSize, getFileIcon, validateFileType } from '$lib/utils/fileUtils';
-	import Button from './Button.svelte';
+	import Button from '$lib/components/ui/button.svelte';
 
 	export let acceptedTypes: string;
 	export let multiple = false;

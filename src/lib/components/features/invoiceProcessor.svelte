@@ -2,11 +2,10 @@
 	import { appStore, processingStore } from '$lib/stores/appStore';
 	import { ACCEPTED_FILE_TYPES, OCR_ENGINES } from '$lib/constants';
 	import { apiService } from '$lib/services/apiService.service';
-	import ProgressBar from '../ui/progressBar.svelte';
-	import Card from '../ui/card.svelte';
-	import Select from '../ui/select.svelte';
-	import FileUpload from '../ui/FileUpload.svelte';
-	import Button from '../ui/Button.svelte';
+	import Card from '$lib/components/ui/card.svelte';
+	import FileUpload from '$lib/components/ui/fileUpload.svelte';
+	import ProgressBar from '$lib/components/ui/progressBar.svelte';
+	import Button from '$lib/components/ui/button.svelte';
 
 	let invoiceFiles: File[] = [];
 	let selectedOcrEngine: 'easyocr' | 'gemini' = 'easyocr';

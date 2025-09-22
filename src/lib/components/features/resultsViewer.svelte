@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Card from '../ui/card.svelte';
-	import Button from '../ui/Button.svelte';
-	import { appStore } from '../../stores/appStore.js';
+	import Card from '$lib/components/ui/card.svelte';
+	import Button from '$lib/components/ui/button.svelte';
+	import { appStore } from '$lib/stores/appStore.js';
 	import { downloadBlob } from '$lib/utils/fileUtils';
 
 	function handleDownload() {
