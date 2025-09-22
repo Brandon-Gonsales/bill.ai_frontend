@@ -1,10 +1,7 @@
-<!-- src/routes/+page.svelte -->
 <script lang="ts">
 	import InvoiceProcessor from '$lib/components/features/invoiceProcessor.svelte';
-	import ResultsViewer from '$lib/components/features/resultsViewer.svelte';
 	import TemplateUpload from '$lib/components/features/templateUpload.svelte';
 	import Header from '$lib/components/layout/header.svelte';
-	import StepIndicator from '$lib/components/layout/stepIndicator.svelte';
 
 	import { appStore, processingStore } from '$lib/stores/appStore.js';
 	import { onMount } from 'svelte';

@@ -1,4 +1,3 @@
-// src/lib/services/api.ts
 import { ENDPOINTS } from '$lib/constants';
 import type { TemplateResponse } from '$lib/interfaces/api.interface.js';
 
