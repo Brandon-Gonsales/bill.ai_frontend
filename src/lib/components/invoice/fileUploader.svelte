@@ -14,9 +14,22 @@
 	const handleFileSelect = (event: Event) => {
 		const target = event.target as HTMLInputElement;
 		if (target.files) {
-			const files = Array.from(target.files);
-			selectedFiles = files;
-			dispatch('filesSelected', files);
+			const newFiles = Array.from(target.files);
+
+			// Si ya hay archivos, agregar los nuevos, si no, reemplazar
+			if (selectedFiles.length > 0) {
+				// Filtrar archivos duplicados por nombre
+				const existingNames = selectedFiles.map((f) => f.name);
+				const uniqueNewFiles = newFiles.filter((f) => !existingNames.includes(f.name));
+				selectedFiles = [...selectedFiles, ...uniqueNewFiles];
+			} else {
+				selectedFiles = newFiles;
+			}
+
+			dispatch('filesSelected', selectedFiles);
+
+			// Limpiar el input para permitir seleccionar el mismo archivo de nuevo si se elimina
+			target.value = '';
 		}
 	};
 
@@ -25,9 +38,19 @@
 		isDragOver = false;
 
 		if (event.dataTransfer?.files) {
-			const files = Array.from(event.dataTransfer.files);
-			selectedFiles = files;
-			dispatch('filesSelected', files);
+			const newFiles = Array.from(event.dataTransfer.files);
+
+			// Si ya hay archivos, agregar los nuevos, si no, reemplazar
+			if (selectedFiles.length > 0) {
+				// Filtrar archivos duplicados por nombre
+				const existingNames = selectedFiles.map((f) => f.name);
+				const uniqueNewFiles = newFiles.filter((f) => !existingNames.includes(f.name));
+				selectedFiles = [...selectedFiles, ...uniqueNewFiles];
+			} else {
+				selectedFiles = newFiles;
+			}
+
+			dispatch('filesSelected', selectedFiles);
 		}
 	};
 

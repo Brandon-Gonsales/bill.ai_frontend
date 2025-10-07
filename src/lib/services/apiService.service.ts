@@ -52,7 +52,7 @@ class ApiService {
 
 	async processInvoices(files: File[], nombre: string, nit: string): Promise<Blob> {
 		const formData = new FormData();
-
+		console.log(files);
 		// Agregar los archivos
 		files.forEach((file) => {
 			formData.append('files', file);
@@ -73,6 +73,23 @@ class ApiService {
 		}
 
 		return response.blob();
+	}
+
+	async clearTemplate(): Promise<{ message: string }> {
+		const response = await fetch(`${this.baseUrl}${ENDPOINTS.CLEAR_TEMPLATE}`, {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json'
+			}
+		});
+
+		if (!response.ok) {
+			const errorText = await response.text();
+			throw new Error(`Error al limpiar plantilla: ${errorText}`);
+		}
+		console.log(response);
+
+		return response.json();
 	}
 }
 
