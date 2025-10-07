@@ -80,7 +80,7 @@
 			addProcessedFile(blob, selectedFiles);
 
 			alert('success', 'Facturas procesadas exitosamente');
-			await apiService.clearTemplate();
+			//	await apiService.clearTemplate();
 		} catch (error) {
 			console.error('Error:', error);
 			alert('error', 'Error al procesar facturas');
