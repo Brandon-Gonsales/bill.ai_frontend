@@ -1,4 +1,5 @@
 <script lang="ts">
+	//fileUploader.svelte
 	import { createEventDispatcher } from 'svelte';
 
 	export let selectedFiles: File[] = [];

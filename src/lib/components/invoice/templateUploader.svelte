@@ -1,7 +1,13 @@
 <script lang="ts">
+	//templateUploader.svelte
+	import { createEventDispatcher } from 'svelte';
 	import type { TemplateResponse } from '$lib/interfaces/api.interface.js';
 	import { apiService } from '$lib/services/apiService.service';
 	import { alert } from '$lib/utils/alert';
+
+	const dispatch = createEventDispatcher<{
+		templateUploaded: void;
+	}>();
 
 	let fileInput: HTMLInputElement;
 	let isUploading = false;
@@ -26,7 +32,10 @@
 		try {
 			const result = await apiService.uploadTemplate(file);
 			lastUploadResult = result;
-			alert('success', ` ${result.message}`);
+			alert('success', `${result.message}`);
+
+			// Emitir evento de template cargado exitosamente
+			dispatch('templateUploaded');
 
 			if (fileInput) {
 				fileInput.value = '';

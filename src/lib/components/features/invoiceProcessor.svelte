@@ -20,13 +20,7 @@
 
 		try {
 			// CAMBIO: El método ahora devuelve un solo Blob (archivo Excel), no un array
-			const resultBlob = await apiService.processInvoicesWithProgress(
-				invoiceFiles,
-				selectedOcrEngine,
-				(progress, currentFile) => {
-					processingStore.updateProgress(progress, currentFile);
-				}
-			);
+			const resultBlob = await apiService.processInvoices(invoiceFiles, selectedOcrEngine);
 
 			processingStore.finishProcessing();
 

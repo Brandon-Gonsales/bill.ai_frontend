@@ -30,13 +30,37 @@ class ApiService {
 		return response.json();
 	}
 
-	async processInvoices(files: File[], ocrEngine: 'easyocr' | 'gemini'): Promise<Blob> {
-		const formData = new FormData();
-		formData.append('ocr_engine', ocrEngine);
+	// async processInvoices(files: File[]): Promise<Blob> {
+	// 	const formData = new FormData();
 
+	// 	files.forEach((file) => {
+	// 		formData.append('files', file);
+	// 	});
+
+	// 	const response = await fetch(`${this.baseUrl}${ENDPOINTS.PROCESS_INVOICE}`, {
+	// 		method: 'POST',
+	// 		body: formData
+	// 	});
+
+	// 	if (!response.ok) {
+	// 		const errorText = await response.text();
+	// 		throw new Error(`Error al procesar facturas: ${errorText}`);
+	// 	}
+
+	// 	return response.blob();
+	// }
+
+	async processInvoices(files: File[], nombre: string, nit: string): Promise<Blob> {
+		const formData = new FormData();
+
+		// Agregar los archivos
 		files.forEach((file) => {
 			formData.append('files', file);
 		});
+
+		// Agregar los nuevos campos
+		formData.append('nombre', nombre);
+		formData.append('nit', nit);
 
 		const response = await fetch(`${this.baseUrl}${ENDPOINTS.PROCESS_INVOICE}`, {
 			method: 'POST',
