@@ -1,62 +1,185 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { authService } from '$lib/services';
 
-	let isSignIn = true;
 	let showPassword = false;
-	let email = '';
+	let username = '';
 	let password = '';
+	let errorMessage = '';
+	let isLoading = false;
 
-	function handleSubmit() {
-		console.log('Submitted:', { email, password, type: isSignIn ? 'signin' : 'signup' });
+	async function handleSubmit() {
+		if (!username || !password) {
+			errorMessage = 'Por favor completa todos los campos';
+			return;
+		}
+
+		isLoading = true;
+		errorMessage = '';
+
+		try {
+			const result = authService.signIn(username, password);
+
+			if (result.success) {
+				goto('/app/process-invoice');
+			} else {
+				errorMessage = result.error ?? 'Credenciales incorrectas';
+			}
+		} catch (error) {
+			errorMessage = 'Error al iniciar sesión';
+		} finally {
+			isLoading = false;
+		}
+	}
+
+	function handleKeyPress(event: KeyboardEvent) {
+		if (event.key === 'Enter') {
+			handleSubmit();
+		}
 	}
 </script>
 
-<div
-	class="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-slate-500 to-slate-900 p-4"
->
-	<div class="w-full max-w-md">
-		<div class="rounded-2xl border border-white/20 bg-white/10 p-8 shadow-2xl backdrop-blur-lg">
-			<!-- Logo -->
-			<div class="mb-8 flex justify-center">
-				<div
-					class="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-400 to-pink-400 shadow-lg transition-transform hover:scale-105"
-				>
-					<svg viewBox="0 0 24 24" fill="none" class="h-12 w-12">
-						<path d="M12 2L2 7L12 12L22 7L12 2Z" fill="white" opacity="0.9" />
-						<path
-							d="M2 17L12 22L22 17"
-							stroke="white"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-						<path
-							d="M2 12L12 17L22 12"
-							stroke="white"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-					</svg>
-				</div>
+<div class="flex min-h-screen bg-gray-50">
+	<!-- Left Side - Branding -->
+	<div
+		class="hidden flex-col justify-between bg-gradient-to-br from-red-600 to-red-700 p-12 lg:flex lg:w-1/2"
+	>
+		<div>
+			<div class="mb-12 flex items-center text-white">
+				<svg viewBox="0 0 24 24" fill="none" class="mr-3 h-10 w-10">
+					<path
+						d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					/>
+				</svg>
+				<span class="text-2xl font-bold">InvoiceProcessor</span>
 			</div>
 
-			<!-- Title -->
-			<h2 class="mb-2 text-center text-3xl font-bold text-white">
-				{isSignIn ? 'Welcome Back' : 'Create Account'}
-			</h2>
-			<p class="mb-8 text-center text-purple-200">
-				{isSignIn ? 'Sign in to continue' : 'Sign up to get started'}
+			<h1 class="mb-6 text-4xl font-bold text-white">
+				Procesa tus facturas<br />en segundos
+			</h1>
+			<p class="mb-8 text-lg text-red-100">
+				Convierte facturas en PDF, imágenes o Word a archivos Excel organizados automáticamente.
 			</p>
 
-			<!-- Form Fields -->
-			<div class="space-y-6">
-				<!-- Email Input -->
+			<div class="space-y-4">
+				<div class="flex items-start">
+					<svg
+						class="mt-1 mr-3 h-6 w-6 text-red-200"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M5 13l4 4L19 7"
+						/>
+					</svg>
+					<div>
+						<h3 class="mb-1 font-semibold text-white">Procesamiento Rápido</h3>
+						<p class="text-sm text-red-100">Tecnología de IA avanzada</p>
+					</div>
+				</div>
+				<div class="flex items-start">
+					<svg
+						class="mt-1 mr-3 h-6 w-6 text-red-200"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M5 13l4 4L19 7"
+						/>
+					</svg>
+					<div>
+						<h3 class="mb-1 font-semibold text-white">100% Seguro</h3>
+						<p class="text-sm text-red-100">Encriptación de nivel empresarial</p>
+					</div>
+				</div>
+				<div class="flex items-start">
+					<svg
+						class="mt-1 mr-3 h-6 w-6 text-red-200"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M5 13l4 4L19 7"
+						/>
+					</svg>
+					<div>
+						<h3 class="mb-1 font-semibold text-white">Múltiples Formatos</h3>
+						<p class="text-sm text-red-100">PDF, imágenes y Word</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="text-sm text-red-100">© 2025 DataHub Analytics</div>
+	</div>
+
+	<!-- Right Side - Login Form -->
+	<div class="flex flex-1 items-center justify-center p-8">
+		<div class="w-full max-w-md">
+			<!-- Mobile Logo -->
+			<div class="mb-8 flex items-center justify-center lg:hidden">
+				<svg viewBox="0 0 24 24" fill="none" class="mr-3 h-10 w-10 text-red-600">
+					<path
+						d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					/>
+				</svg>
+				<span class="text-2xl font-bold text-gray-900">InvoiceProcessor</span>
+			</div>
+
+			<div class="mb-8">
+				<h2 class="mb-2 text-3xl font-bold text-gray-900">Iniciar Sesión</h2>
+				<p class="text-gray-600">Ingresa tus credenciales para continuar</p>
+			</div>
+
+			<!-- Error Message -->
+			{#if errorMessage}
+				<div class="mb-6 flex items-start rounded-lg border border-red-200 bg-red-50 p-4">
+					<svg
+						class="mt-0.5 mr-3 h-5 w-5 text-red-600"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+						/>
+					</svg>
+					<p class="text-sm text-red-800">{errorMessage}</p>
+				</div>
+			{/if}
+
+			<form on:submit|preventDefault={handleSubmit} class="space-y-6">
+				<!-- Username -->
 				<div>
-					<label class="mb-2 block text-sm font-medium text-purple-100"> Email </label>
+					<label for="username" class="mb-2 block text-sm font-medium text-gray-700">
+						Usuario
+					</label>
 					<div class="relative">
 						<svg
-							class="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-purple-300"
+							class="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-gray-400"
 							fill="none"
 							stroke="currentColor"
 							viewBox="0 0 24 24"
@@ -65,24 +188,29 @@
 								stroke-linecap="round"
 								stroke-linejoin="round"
 								stroke-width="2"
-								d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+								d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
 							/>
 						</svg>
 						<input
-							type="email"
-							bind:value={email}
-							class="w-full rounded-lg border border-white/20 bg-white/5 py-3 pr-4 pl-11 text-white placeholder-purple-300/50 transition-all focus:border-transparent focus:ring-2 focus:ring-purple-400 focus:outline-none"
-							placeholder="you@example.com"
+							id="username"
+							type="text"
+							bind:value={username}
+							on:keypress={handleKeyPress}
+							class="w-full rounded-lg border border-gray-300 py-3 pr-4 pl-11 transition-all outline-none focus:border-transparent focus:ring-2 focus:ring-red-500"
+							placeholder="tu.usuario"
+							disabled={isLoading}
 						/>
 					</div>
 				</div>
 
-				<!-- Password Input -->
+				<!-- Password -->
 				<div>
-					<label class="mb-2 block text-sm font-medium text-purple-100"> Password </label>
+					<label for="password" class="mb-2 block text-sm font-medium text-gray-700">
+						Contraseña
+					</label>
 					<div class="relative">
 						<svg
-							class="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-purple-300"
+							class="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-gray-400"
 							fill="none"
 							stroke="currentColor"
 							viewBox="0 0 24 24"
@@ -95,15 +223,19 @@
 							/>
 						</svg>
 						<input
+							id="password"
 							type={showPassword ? 'text' : 'password'}
 							bind:value={password}
-							class="w-full rounded-lg border border-white/20 bg-white/5 py-3 pr-11 pl-11 text-white placeholder-purple-300/50 transition-all focus:border-transparent focus:ring-2 focus:ring-purple-400 focus:outline-none"
+							on:keypress={handleKeyPress}
+							class="w-full rounded-lg border border-gray-300 py-3 pr-11 pl-11 transition-all outline-none focus:border-transparent focus:ring-2 focus:ring-red-500"
 							placeholder="••••••••"
+							disabled={isLoading}
 						/>
 						<button
 							type="button"
 							on:click={() => (showPassword = !showPassword)}
-							class="absolute top-1/2 right-3 -translate-y-1/2 transform text-purple-300 transition-colors hover:text-white"
+							class="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600"
+							disabled={isLoading}
 						>
 							{#if showPassword}
 								<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -135,43 +267,77 @@
 				</div>
 
 				<!-- Forgot Password -->
-				{#if isSignIn}
-					<div class="flex justify-end">
-						<button
-							type="button"
-							class="text-sm text-purple-300 transition-colors hover:text-purple-200"
-						>
-							Forgot password?
-						</button>
-					</div>
-				{/if}
+				<div class="flex justify-end">
+					<button
+						type="button"
+						class="text-sm font-medium text-red-600 transition-colors hover:text-red-700"
+					>
+						¿Olvidaste tu contraseña?
+					</button>
+				</div>
 
 				<!-- Submit Button -->
 				<button
-					on:click={handleSubmit}
-					class="w-full rounded-lg bg-gradient-to-r from-slate-50 to-gray-400 py-3 font-semibold text-white shadow-lg transition-all hover:scale-[1.02] hover:from-slate-100 hover:to-gray-500"
+					type="submit"
+					disabled={isLoading}
+					class="flex w-full items-center justify-center rounded-lg bg-red-600 py-3 font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
 				>
-					{isSignIn ? 'Sign In' : 'Sign Up'}
+					{#if isLoading}
+						<svg class="mr-3 h-5 w-5 animate-spin" viewBox="0 0 24 24">
+							<circle
+								class="opacity-25"
+								cx="12"
+								cy="12"
+								r="10"
+								stroke="currentColor"
+								stroke-width="4"
+								fill="none"
+							/>
+							<path
+								class="opacity-75"
+								fill="currentColor"
+								d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+							/>
+						</svg>
+						Iniciando sesión...
+					{:else}
+						Iniciar Sesión
+					{/if}
 				</button>
-			</div>
+			</form>
 
-			<!-- Toggle Sign In/Sign Up -->
-			<div class="mt-6 text-center">
-				<p class="text-purple-200">
-					{isSignIn ? "Don't have an account? " : 'Already have an account? '}
+			<!-- Sign Up Link -->
+			<div class="mt-8 text-center">
+				<p class="text-gray-600">
+					¿No tienes una cuenta?
 					<button
-						on:click={() => goto('auth/sign-up')}
-						class="font-semibold text-purple-300 transition-colors hover:text-white"
+						type="button"
+						on:click={() => goto('/auth/sign-up')}
+						class="ml-1 font-semibold text-red-600 transition-colors hover:text-red-700"
 					>
-						{isSignIn ? 'Sign Up' : 'Sign In'}
+						Regístrate gratis
 					</button>
 				</p>
 			</div>
-		</div>
 
-		<!-- Footer Note -->
-		<p class="mt-6 text-center text-xs text-purple-300/60">
-			Protected by enterprise-grade security
-		</p>
+			<!-- Back to Home -->
+			<div class="mt-6 text-center">
+				<button
+					type="button"
+					on:click={() => goto('/')}
+					class="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700"
+				>
+					<svg class="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M10 19l-7-7m0 0l7-7m-7 7h18"
+						/>
+					</svg>
+					Volver al inicio
+				</button>
+			</div>
+		</div>
 	</div>
 </div>

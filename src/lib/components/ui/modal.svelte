@@ -1,14 +1,14 @@
 <script lang="ts">
-	// Modal.svelte
 	import { createEventDispatcher } from 'svelte';
 	import { fade, scale } from 'svelte/transition';
 
 	export let show = false;
 	export let nombre = '';
 	export let nit = '';
+	export let es_compra = true;
 
 	const dispatch = createEventDispatcher<{
-		confirm: { nombre: string; nit: string };
+		confirm: { nombre: string; nit: string; es_compra: boolean };
 		cancel: void;
 	}>();
 
@@ -16,20 +16,14 @@
 	let localNit = nit;
 
 	const handleConfirm = () => {
-		if (!localNombre.trim() || !localNit.trim()) {
-			return;
-		}
-		dispatch('confirm', { nombre: localNombre, nit: localNit });
+		if (!localNombre.trim() || !localNit.trim()) return;
+		dispatch('confirm', { nombre: localNombre, nit: localNit, es_compra });
 	};
 
-	const handleCancel = () => {
-		dispatch('cancel');
-	};
+	const handleCancel = () => dispatch('cancel');
 
 	const handleBackdropClick = (e: MouseEvent) => {
-		if (e.target === e.currentTarget) {
-			handleCancel();
-		}
+		if (e.target === e.currentTarget) handleCancel();
 	};
 
 	$: isValid = localNombre.trim().length > 0 && localNit.trim().length > 0;
@@ -115,6 +109,35 @@
 						class="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 transition-colors focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none"
 						on:keydown={(e) => e.key === 'Enter' && isValid && handleConfirm()}
 					/>
+				</div>
+
+				<!-- 🧩 Toggle Compra/Venta -->
+				<div class="flex items-center justify-between">
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Tipo de operación</label>
+						<p class="text-sm text-gray-500">
+							Selecciona si estás procesando una <span class="font-semibold text-gray-700"
+								>{es_compra ? 'compra' : 'venta'}</span
+							>.
+						</p>
+					</div>
+
+					<!-- Toggle Switch -->
+					<button
+						type="button"
+						role="switch"
+						aria-checked={es_compra}
+						on:click={() => (es_compra = !es_compra)}
+						class="relative inline-flex h-6 w-12 items-center rounded-full transition-colors focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:outline-none"
+						class:bg-red-600={es_compra}
+						class:bg-gray-300={!es_compra}
+					>
+						<span
+							class="inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform"
+							class:translate-x-6={es_compra}
+							class:translate-x-1={!es_compra}
+						></span>
+					</button>
 				</div>
 			</div>
 

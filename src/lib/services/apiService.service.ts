@@ -50,9 +50,14 @@ class ApiService {
 	// 	return response.blob();
 	// }
 
-	async processInvoices(files: File[], nombre: string, nit: string): Promise<Blob> {
+	async processInvoices(
+		files: File[],
+		nombre: string,
+		nit: string,
+		es_compra: boolean
+	): Promise<Blob> {
 		const formData = new FormData();
-		console.log(files);
+		console.log(es_compra);
 		// Agregar los archivos
 		files.forEach((file) => {
 			formData.append('files', file);
@@ -61,6 +66,7 @@ class ApiService {
 		// Agregar los nuevos campos
 		formData.append('nombre', nombre);
 		formData.append('nit', nit);
+		formData.append('es_compra', String(es_compra));
 
 		const response = await fetch(`${this.baseUrl}${ENDPOINTS.PROCESS_INVOICE}`, {
 			method: 'POST',
