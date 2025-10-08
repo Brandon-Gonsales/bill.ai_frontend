@@ -46,7 +46,6 @@
 				<div class="flex items-start justify-between">
 					<div>
 						<h3 class="text-xl font-semibold text-gray-900">Información de procesamiento</h3>
-						<p class="mt-1 text-sm text-gray-600">Ingresa los datos para procesar las facturas</p>
 					</div>
 					<button
 						on:click={handleCancel}
@@ -67,20 +66,6 @@
 
 			<!-- Body -->
 			<div class="space-y-5 px-6 py-6">
-				<!-- Info Banner -->
-				<div class="flex gap-3 rounded-lg bg-blue-50 p-4">
-					<svg class="h-5 w-5 flex-shrink-0 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-						<path
-							fill-rule="evenodd"
-							d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-							clip-rule="evenodd"
-						/>
-					</svg>
-					<p class="text-sm text-blue-800">
-						Como no has subido una plantilla, necesitamos estos datos para procesar las facturas
-					</p>
-				</div>
-
 				<!-- Nombre Input -->
 				<div>
 					<label for="nombre" class="mb-2 block text-sm font-medium text-gray-700">
@@ -98,9 +83,7 @@
 
 				<!-- NIT Input -->
 				<div>
-					<label for="nit" class="mb-2 block text-sm font-medium text-gray-700">
-						NIT / CI / CEX
-					</label>
+					<label for="nit" class="mb-2 block text-sm font-medium text-gray-700"> NIT </label>
 					<input
 						id="nit"
 						type="text"
@@ -113,12 +96,10 @@
 
 				<!-- 🧩 Toggle Compra/Venta -->
 				<div class="flex items-center justify-between">
-					<div>
-						<label class="block text-sm font-medium text-gray-700">Tipo de operación</label>
-						<p class="text-sm text-gray-500">
-							Selecciona si estás procesando una <span class="font-semibold text-gray-700"
-								>{es_compra ? 'compra' : 'venta'}</span
-							>.
+					<div class="flex gap-1">
+						<h2 class="block text-sm text-gray-700">Tipo de operación:</h2>
+						<p class="text-sm font-bold text-gray-700">
+							Factura <span class=" text-gray-700">{es_compra ? 'compra' : 'venta'}</span>.
 						</p>
 					</div>
 
