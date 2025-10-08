@@ -91,6 +91,7 @@
 					<ChevronRightIcon class="ml-2 h-5 w-5" />
 				</button>
 				<button
+					on:click={navigateToLogin}
 					class="rounded-lg border-2 border-gray-300 px-8 py-4 text-lg font-medium text-gray-700 transition-colors hover:border-gray-400"
 				>
 					Ver Demo
@@ -220,7 +221,7 @@
 					</div>
 					<h3 class="mb-2 text-2xl font-bold">Premium</h3>
 					<div class="mb-6">
-						<span class="text-4xl font-bold">$29</span>
+						<span class="text-4xl font-bold">$9</span>
 						<span class="text-red-100">/mes</span>
 					</div>
 					<ul class="mb-8 space-y-3">

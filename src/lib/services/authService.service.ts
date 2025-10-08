@@ -29,7 +29,7 @@ class AuthService {
 			return { success: false, error: 'Credenciales inválidas' };
 		}
 
-		localStorage.setItem('user', JSON.stringify(user));
+		//	localStorage.setItem('user', JSON.stringify(user));
 		return { success: true, user };
 	}
 
