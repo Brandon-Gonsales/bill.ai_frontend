@@ -5,6 +5,7 @@
 	import Modal from '$lib/components/ui/modal.svelte';
 	import { apiService } from '$lib/services/apiService.service';
 	import { addProcessedFile } from '$lib/stores/processedFilesStore';
+	import { templateStore } from '$lib/stores/templateStore';
 	import { alert } from '$lib/utils/alert';
 
 	let selectedFiles: File[] = [];
@@ -20,7 +21,7 @@
 	let userNit = '';
 
 	// Template state
-	let hasTemplate = false;
+	let hasTemplate = $templateStore.campos_detectados.length > 0;
 
 	const handleFilesSelected = (files: File[]) => {
 		selectedFiles = files;
@@ -42,7 +43,7 @@
 		}
 
 		// Si no hay template, mostrar modal
-		if (!hasTemplate) {
+		if ($templateStore.campos_detectados.length <= 0) {
 			showModal = true;
 			return;
 		}
@@ -74,13 +75,15 @@
 			}
 
 			processedFileUrl = URL.createObjectURL(blob);
-			processedFileName = `facturas_procesadas_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.xlsx`;
+			console.log('blob: ', blob);
+			processedFileName = `archivo_procesado-${Date.now()}`; // Usar el nombre del archivo del response
 
 			// Agregar al store para persistencia
 			addProcessedFile(blob, selectedFiles);
 
 			alert('success', 'Facturas procesadas exitosamente');
-			//	await apiService.clearTemplate();
+			apiService.clearTemplate();
+			templateStore.clear();
 		} catch (error) {
 			console.error('Error:', error);
 			alert('error', 'Error al procesar facturas');
@@ -135,7 +138,7 @@
 						<div class="flex items-center gap-3">
 							<span class="text-lg">📋</span>
 							<span class="font-medium text-gray-700">Configurar plantilla Excel (opcional)</span>
-							{#if hasTemplate}
+							{#if $templateStore.campos_detectados.length > 0}
 								<span
 									class="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700"
 								>

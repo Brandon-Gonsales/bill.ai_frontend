@@ -4,6 +4,7 @@
 	import type { TemplateResponse } from '$lib/interfaces/api.interface.js';
 	import { apiService } from '$lib/services/apiService.service';
 	import { alert } from '$lib/utils/alert';
+	import { templateStore } from '$lib/stores/templateStore';
 
 	const dispatch = createEventDispatcher<{
 		templateUploaded: void;
@@ -31,9 +32,8 @@
 		isUploading = true;
 		try {
 			const result = await apiService.uploadTemplate(file);
-			lastUploadResult = result;
+			templateStore.setTemplateData(result);
 			alert('success', `${result.message}`);
-
 			// Emitir evento de template cargado exitosamente
 			dispatch('templateUploaded');
 
@@ -43,7 +43,7 @@
 		} catch (error) {
 			console.error('Error:', error);
 			alert('error', `Error al cargar plantilla`);
-			lastUploadResult = null;
+			templateStore.clear();
 		} finally {
 			isUploading = false;
 		}
@@ -78,17 +78,17 @@
 		</button>
 	</div>
 
-	{#if lastUploadResult}
+	{#if $templateStore.campos_detectados.length > 0}
 		<div class="rounded-lg border border-green-200 bg-green-50 p-3">
 			<p class="mb-2 text-sm font-medium text-green-800">
-				✅ {lastUploadResult.message}
+				✅ {$templateStore.message}
 			</p>
 
-			{#if lastUploadResult.campos_detectados && lastUploadResult.campos_detectados.length > 0}
+			{#if $templateStore.campos_detectados.length > 0}
 				<div>
 					<p class="mb-2 text-xs text-green-700">Campos detectados:</p>
 					<div class="flex flex-wrap gap-1">
-						{#each lastUploadResult.campos_detectados as campo}
+						{#each $templateStore.campos_detectados as campo}
 							<span class="rounded bg-green-100 px-2 py-1 text-xs text-green-800">
 								{campo}
 							</span>

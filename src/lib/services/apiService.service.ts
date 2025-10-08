@@ -71,7 +71,7 @@ class ApiService {
 			const errorText = await response.text();
 			throw new Error(`Error al procesar facturas: ${errorText}`);
 		}
-
+		console.log(response);
 		return response.blob();
 	}
 
