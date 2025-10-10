@@ -281,11 +281,11 @@
 				</div>
 				<div class="grid grid-cols-2 gap-6">
 					<div class="text-center">
-						<div class="mb-2 text-4xl font-bold text-red-600">10+</div>
+						<div class="mb-2 text-4xl font-bold text-red-600">1+</div>
 						<div class="text-gray-600">Años de Experiencia</div>
 					</div>
 					<div class="text-center">
-						<div class="mb-2 text-4xl font-bold text-red-600">100+</div>
+						<div class="mb-2 text-4xl font-bold text-red-600">20+</div>
 						<div class="text-gray-600">Proyectos Completados</div>
 					</div>
 					<div class="col-span-2 text-center">
