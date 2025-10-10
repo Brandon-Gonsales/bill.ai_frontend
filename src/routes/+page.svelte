@@ -349,7 +349,6 @@
 					<ul class="space-y-2 text-gray-400">
 						<li><a href="#features" class="hover:text-white">Características</a></li>
 						<li><a href="#pricing" class="hover:text-white">Precios</a></li>
-						<li><a href="#" class="hover:text-white">API</a></li>
 					</ul>
 				</div>
 				<div>
