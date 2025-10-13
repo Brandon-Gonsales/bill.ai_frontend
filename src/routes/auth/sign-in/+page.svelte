@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { Button } from '$lib/components/ui';
 	import { authService } from '$lib/services';
 
 	let showPassword = false;
@@ -39,10 +40,10 @@
 	}
 </script>
 
-<div class="flex min-h-screen bg-gray-50">
+<div class="flex min-h-screen">
 	<!-- Left Side - Branding -->
 	<div
-		class="hidden flex-col justify-between bg-gradient-to-br from-red-600 to-red-700 p-12 lg:flex lg:w-1/2"
+		class="hidden flex-col justify-between bg-gradient-to-br from-light-tertiary to-light-four p-12 lg:flex lg:w-1/2"
 	>
 		<div>
 			<div class="mb-12 flex items-center text-white">
@@ -55,7 +56,7 @@
 						stroke-linejoin="round"
 					/>
 				</svg>
-				<span class="text-2xl font-bold">InvoiceProcessor</span>
+				<span class="text-2xl font-bold">Bill AI</span>
 			</div>
 
 			<h1 class="mb-6 text-4xl font-bold text-white">
@@ -196,7 +197,7 @@
 							type="text"
 							bind:value={username}
 							on:keypress={handleKeyPress}
-							class="w-full rounded-lg border border-gray-300 py-3 pr-4 pl-11 transition-all outline-none focus:border-transparent focus:ring-2 focus:ring-red-500"
+							class="w-full rounded-lg border border-light-four py-3 pr-4 pl-11 transition-all outline-none focus:border-transparent focus:ring-2 focus:ring-light-secondary"
 							placeholder="tu.usuario"
 							disabled={isLoading}
 						/>
@@ -227,7 +228,7 @@
 							type={showPassword ? 'text' : 'password'}
 							bind:value={password}
 							on:keypress={handleKeyPress}
-							class="w-full rounded-lg border border-gray-300 py-3 pr-11 pl-11 transition-all outline-none focus:border-transparent focus:ring-2 focus:ring-red-500"
+							class="w-full rounded-lg border border-light-four py-3 pr-11 pl-11 transition-all outline-none focus:border-transparent focus:ring-2 focus:ring-light-secondary"
 							placeholder="••••••••"
 							disabled={isLoading}
 						/>
@@ -270,18 +271,14 @@
 				<div class="flex justify-end">
 					<button
 						type="button"
-						class="text-sm font-medium text-red-600 transition-colors hover:text-red-700"
+						class="text-sm font-medium text-light-tertiary transition-colors hover:text-light-tertiary_d"
 					>
 						¿Olvidaste tu contraseña?
 					</button>
 				</div>
 
 				<!-- Submit Button -->
-				<button
-					type="submit"
-					disabled={isLoading}
-					class="flex w-full items-center justify-center rounded-lg bg-red-600 py-3 font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
-				>
+				<Button type="submit" disabled={isLoading} {isLoading} fullWidth>
 					{#if isLoading}
 						<svg class="mr-3 h-5 w-5 animate-spin" viewBox="0 0 24 24">
 							<circle
@@ -303,7 +300,7 @@
 					{:else}
 						Iniciar Sesión
 					{/if}
-				</button>
+				</Button>
 			</form>
 
 			<!-- Sign Up Link -->
@@ -313,7 +310,7 @@
 					<button
 						type="button"
 						on:click={() => goto('/auth/sign-up')}
-						class="ml-1 font-semibold text-red-600 transition-colors hover:text-red-700"
+						class="ml-1 font-semibold text-light-tertiary transition-colors hover:text-light-tertiary_d"
 					>
 						Regístrate gratis
 					</button>

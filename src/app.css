@@ -1,3 +1,57 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+@custom-variant dark (&:where(.dark, .dark *));
+@theme {
+	--breakpoint-*: initial;
+	--breakpoint-sm: 640px;
+	--breakpoint-md: 768px;
+	--breakpoint-lg: 1024px;
+	--breakpoint-xl: 1280px;
+	--breakpoint-2xl: 1536px;
+	--color-light-primary: #f6fbfd; /*c4e2f2*/
+	--color-light-primary_d: #e1f2f9; /*9fcfe9*/
+	--color-light-secondary: #2889bc;
+	--color-light-secondary_d: #20709a;
+	--color-light-tertiary: #0b78b1;
+	--color-light-tertiary_d: #095f8d;
+	--color-light-four: #c4e2f2;
+	--color-light-four_d: #9fcfe9;
+	--color-light-accent: #9dbe8c;
+	--color-light-accent_d: #9dbe8c;
+	--color-light-error: #fa3842;
+	--color-light-success: #16a34a;
+	--color-light-warning: #f59e0b;
+	--color-light-white: #ffffff;
+	--color-light-black: #000000;
+
+	--color-dark-primary: #0a1a24; /*000000*/
+	--color-dark-primary_d: #132c3a; /*333333*/
+	--color-dark-secondary: #dad7d0;
+	--color-dark-secondary_d: #e2e0da;
+	--color-dark-tertiary: #e9dec3;
+	--color-dark-tertiary_d: #e9dec3;
+	--color-dark-four: #f3f4f6;
+	--color-dark-four_d: #e5e7eb;
+	--color-dark-accent: #9dbe8c;
+	--color-dark-accent_d: #9dbe8c;
+	--color-dark-error: #fa3842;
+	--color-dark-success: #16a34a;
+	--color-dark-warning: #f59e0b;
+	--color-dark-white: #ffffff;
+	--color-dark-black: #000000;
+
+	--animate-wiggle: wiggle 1s ease-in-out infinite;
+
+	--screen-dynamic: '100dvh';
+	@keyframes wiggle {
+		0%,
+		100% {
+			transform: rotate(-3deg);
+		}
+		50% {
+			transform: rotate(3deg);
+		}
+	}
+}
