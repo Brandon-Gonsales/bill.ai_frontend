@@ -26,14 +26,35 @@
 	--color-light-white: #ffffff;
 	--color-light-black: #000000;
 
-	--color-dark-primary: #0a1a24; /*000000*/
-	--color-dark-primary_d: #132c3a; /*333333*/
+	/* --color-dark-primary: #0a1a24; 
+	--color-dark-primary_d: #132c3a; 
 	--color-dark-secondary: #dad7d0;
 	--color-dark-secondary_d: #e2e0da;
 	--color-dark-tertiary: #e9dec3;
 	--color-dark-tertiary_d: #e9dec3;
 	--color-dark-four: #f3f4f6;
-	--color-dark-four_d: #e5e7eb;
+	--color-dark-four_d: #e5e7eb; */
+	/* ==== Dark Theme ==== */
+--color-dark-background: #0f1720; /* fondo principal - azul petróleo oscuro */
+--color-dark-surface: #1a2530;    /* tarjetas, inputs, secciones */
+--color-dark-border: #24313f;     /* bordes suaves y discretos */
+
+/* Primarios (baseados en tu primary light) */
+--color-dark-primary: #0d2530;    /* versión oscura del #f6fbfd */
+--color-dark-primary_d: #142b3a;  /* sutil más profunda */
+
+/* Secundarios (acentos) */
+--color-dark-secondary: #3ca7db;  /* derivado de #2889bc, más luminoso en dark */
+--color-dark-secondary_d: #2d86b0; /* variante más profunda */
+
+/* Terciarios (acentos secundarios) */
+--color-dark-tertiary: #4ec0f0;   /* más vibrante que #0b78b1 para resaltar */
+--color-dark-tertiary_d: #3799c4; /* versión más oscura */
+
+/* Cuaternarios (suaves de apoyo) */
+--color-dark-four: #223545;       /* equivalente oscuro del #c4e2f2 */
+--color-dark-four_d: #1a2a38;     /* más profundo */
+
 	--color-dark-accent: #9dbe8c;
 	--color-dark-accent_d: #9dbe8c;
 	--color-dark-error: #fa3842;

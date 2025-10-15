@@ -1,11 +1,18 @@
 <script lang="ts">
 	import { themeStore } from '$lib/stores/themeStore';
 	import { onMount } from 'svelte';
+	import { slide } from 'svelte/transition';
 	import { clickOutside } from '$lib/utils/clickOutside';
+	import { authService } from '$lib/services';
+	import { goto } from '$app/navigation';
+	import { MoonIcon, SunIcon } from '$lib/icons/solid';
 
-	let isMenuOpen = false;
-	let userName = 'Usuario Demo';
-	let userInitials = 'UD';
+	let { children } = $props();
+
+	let isMenuOpen: boolean = $state(false);
+	let userName: string = $state('Data Hub');
+	let userInitials: string = $state('DH');
+	let buttonRef: HTMLButtonElement;
 
 	const toggleMenu = () => {
 		isMenuOpen = !isMenuOpen;
@@ -15,10 +22,17 @@
 		isMenuOpen = false;
 	};
 
-	const handleLogout = () => {
-		console.log('Logout clicked');
+	const handleClickOutside = (event: MouseEvent) => {
+		// No cerrar si el clic fue en el botón
+		if (buttonRef && buttonRef.contains(event.target as Node)) {
+			return;
+		}
 		closeMenu();
-		// Aquí irá tu lógica de logout
+	};
+
+	const handleLogout = () => {
+		authService.signOut();
+		goto('/auth/sign-in');
 	};
 
 	const handleThemeToggle = () => {
@@ -42,7 +56,8 @@
 	<div class="relative">
 		<!-- Profile Button -->
 		<button
-			on:click={toggleMenu}
+			bind:this={buttonRef}
+			onclick={toggleMenu}
 			class="flex h-11 w-11 items-center justify-center rounded-full bg-light-secondary p-4 text-sm font-semibold text-light-white shadow-lg transition-all duration-200 hover:bg-light-secondary_d focus:ring-2 focus:ring-light-tertiary focus:ring-offset-2 focus:outline-none dark:bg-dark-secondary dark:text-dark-primary dark:hover:bg-dark-secondary_d dark:focus:ring-dark-tertiary dark:focus:ring-offset-dark-primary"
 			aria-label="Menu de usuario"
 			aria-expanded={isMenuOpen}
@@ -53,44 +68,38 @@
 		<!-- Dropdown Menu -->
 		{#if isMenuOpen}
 			<div
-				use:clickOutside={closeMenu}
-				class="animate-slideDown absolute right-0 mt-2 w-56 rounded-lg border border-light-four bg-light-white shadow-xl dark:border-dark-primary dark:bg-dark-primary_d"
+				transition:slide={{ duration: 200 }}
+				use:clickOutside={handleClickOutside}
+				class="absolute right-0 mt-2 w-56 rounded-lg border border-light-four bg-light-white shadow-xl dark:border-dark-primary dark:bg-dark-primary_d"
 			>
 				<!-- User Info -->
 				<div class="border-b border-light-four px-4 py-3 dark:border-dark-primary">
 					<p class="text-sm font-semibold text-light-black dark:text-dark-secondary">
 						{userName}
 					</p>
-					<p class="mt-0.5 text-xs text-light-tertiary dark:text-dark-tertiary">usuario@demo.com</p>
+					<p class="mt-0.5 text-xs text-light-tertiary dark:text-dark-tertiary">
+						dataHubAnalitycs@hotmail.com
+					</p>
 				</div>
 
 				<!-- Menu Items -->
 				<div class="py-2">
 					<!-- Theme Toggle -->
 					<button
-						on:click={handleThemeToggle}
-						class="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-light-black transition-colors duration-150 hover:bg-light-primary dark:text-dark-secondary dark:hover:bg-dark-primary"
+						onclick={handleThemeToggle}
+						class="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-light-black transition-colors duration-150 hover:bg-light-primary_d dark:text-dark-secondary dark:hover:bg-dark-primary_d"
 					>
-						<svg
-							class="h-5 w-5"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-							/>
-						</svg>
-						<span>Cambiar tema</span>
+						{#if $themeStore === 'light'}
+							<MoonIcon class="h-5 w-5" />
+						{:else}
+							<SunIcon class="h-5 w-5" />
+						{/if}
+						<span>{$themeStore === 'light' ? 'Tema oscuro' : 'Tema claro'}</span>
 					</button>
 
 					<!-- Logout -->
 					<button
-						on:click={handleLogout}
+						onclick={handleLogout}
 						class="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-light-error transition-colors duration-150 hover:bg-light-primary dark:text-dark-error dark:hover:bg-dark-primary"
 					>
 						<svg
@@ -114,20 +123,4 @@
 		{/if}
 	</div>
 </div>
-
-<style>
-	@keyframes slideDown {
-		from {
-			opacity: 0;
-			transform: translateY(-10px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
-
-	.animate-slideDown {
-		animation: slideDown 0.2s ease-out;
-	}
-</style>
+{@render children()}

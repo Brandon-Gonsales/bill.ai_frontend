@@ -5,9 +5,11 @@
 	import ChevronRightIcon from '$lib/icons/outline/chevronRightIcon.svelte';
 	import FileTextIcon from '$lib/icons/outline/fileTextIcon.svelte';
 	import Menu2Icon from '$lib/icons/outline/menu2Icon.svelte';
-	import { ShieldIcon } from '$lib/icons/solid';
+	import { MoonIcon, ShieldIcon, SunIcon } from '$lib/icons/solid';
 	import BoltIcon from '$lib/icons/solid/boltIcon.svelte';
 	import FilePencilIcon from '$lib/icons/solid/filePencilIcon.svelte';
+	import { themeStore } from '$lib/stores/themeStore';
+	import { fade, fly, scale } from 'svelte/transition';
 
 	let mobileMenuOpen = false;
 
@@ -50,11 +52,33 @@
 						class="text-light-secondary hover:text-light-secondary_d dark:text-dark-secondary dark:hover:text-dark-secondary_d"
 						>Nosotros</a
 					>
+					<button
+						onclick={themeStore.toggleTheme}
+						class={`dark:hover:bg-dark-primary" relative rounded-full  p-2 text-light-black transition-all duration-300 hover:bg-light-primary_d dark:text-dark-white dark:hover:bg-dark-primary_d `}
+						aria-label={`Switch to ${$themeStore === 'light' ? 'light' : 'dark'} mode`}
+					>
+						<div class="relative flex h-6 w-6 items-center justify-center">
+							<SunIcon
+								class={`absolute h-5 w-5 transform transition-all duration-500 ${
+									$themeStore === 'light'
+										? 'scale-0 rotate-90 opacity-0'
+										: 'scale-100 rotate-0 opacity-100'
+								}`}
+							/>
+							<MoonIcon
+								class={`absolute h-5 w-5 transform transition-all duration-500 ${
+									$themeStore === 'light'
+										? 'scale-100 rotate-0 opacity-100'
+										: 'scale-0 -rotate-90 opacity-0'
+								}`}
+							/>
+						</div>
+					</button>
 					<Button onclick={navigateToLogin}>Iniciar Sesión</Button>
 				</div>
 
 				<!-- Mobile menu button -->
-				<button class="md:hidden" on:click={toggleMobileMenu}>
+				<button class="md:hidden" onclick={toggleMobileMenu}>
 					{#if mobileMenuOpen}
 						<XIcon class="h-6 w-6 text-light-tertiary dark:text-dark-tertiary" />
 					{:else}
@@ -112,7 +136,7 @@
 				<div class="mx-auto max-w-4xl p-8">
 					<div class="mb-6 grid grid-cols-2 gap-4">
 						<div
-							class="flex flex-col items-center justify-center rounded-lg bg-gradient-to-r from-light-primary to-light-primary_d p-6 dark:from-light-primary_d dark:to-light-primary_d"
+							class="flex flex-col items-center justify-center rounded-lg bg-gradient-to-r from-light-primary to-light-primary_d p-6 dark:from-dark-primary_d dark:to-dark-primary_d"
 						>
 							<FileTextIcon class="mb-2 h-12 w-12 text-light-tertiary dark:text-dark-tertiary" />
 							<span class="text-sm font-medium text-light-secondary dark:text-dark-secondary"
@@ -120,7 +144,7 @@
 							>
 						</div>
 						<div
-							class="flex flex-col items-center justify-center rounded-lg bg-gradient-to-l from-light-primary to-light-primary_d p-6 dark:from-light-primary_d dark:to-light-primary_d"
+							class="flex flex-col items-center justify-center rounded-lg bg-gradient-to-l from-light-primary to-light-primary_d p-6 dark:from-dark-primary_d dark:to-dark-primary_d"
 						>
 							<FileTextIcon class="mb-2 h-12 w-12 text-light-tertiary dark:text-dark-tertiary" />
 							<span class="text-sm font-medium text-light-secondary dark:text-dark-secondary"
@@ -201,30 +225,38 @@
 	<section id="pricing" class="px-4 py-20 sm:px-6 lg:px-8">
 		<div class="mx-auto max-w-7xl">
 			<div class="mb-16 text-center">
-				<h2 class="mb-4 text-4xl font-bold text-light-black">Planes y Precios</h2>
-				<p class="text-xl text-light-black">Elige el plan perfecto para tu negocio</p>
+				<h2 class="mb-4 text-4xl font-bold text-light-black dark:text-dark-white">
+					Planes y Precios
+				</h2>
+				<p class="text-xl text-light-black dark:text-dark-white">
+					Elige el plan perfecto para tu negocio
+				</p>
 			</div>
 
 			<div class="mx-auto grid max-w-4xl gap-8 md:grid-cols-2">
 				<!-- Free Plan -->
-				<div class="rounded-xl border border-light-four p-8 transition-shadow hover:shadow-lg">
-					<h3 class="mb-2 text-2xl font-bold text-light-secondary">Gratis</h3>
+				<div
+					class="rounded-xl border border-light-four p-8 transition-shadow hover:shadow-lg dark:border-dark-four"
+				>
+					<h3 class="mb-2 text-2xl font-bold text-light-secondary dark:text-dark-secondary">
+						Gratis
+					</h3>
 					<div class="mb-6">
-						<span class="text-4xl font-bold text-light-secondary">$0</span>
-						<span class="text-light-secondary_d">/mes</span>
+						<span class="text-4xl font-bold text-light-secondary dark:text-dark-secondary">$0</span>
+						<span class="text-light-secondary_d dark:text-dark-secondary">/mes</span>
 					</div>
 					<ul class="mb-8 space-y-3">
 						<li class="flex items-center">
-							<CheckIcon class="mr-3 h-5 w-5 text-light-tertiary" />
-							<span class="text-light-black">1000 facturas por mes</span>
+							<CheckIcon class="mr-3 h-5 w-5 text-light-tertiary dark:text-dark-tertiary" />
+							<span class="text-light-black dark:text-dark-white">1000 facturas por mes</span>
 						</li>
 						<li class="flex items-center">
-							<CheckIcon class="mr-3 h-5 w-5 text-light-tertiary" />
-							<span class="text-light-black">PDF e imágenes</span>
+							<CheckIcon class="mr-3 h-5 w-5 text-light-tertiary dark:text-dark-tertiary" />
+							<span class="text-light-black dark:text-dark-white">PDF e imágenes</span>
 						</li>
 						<li class="flex items-center">
-							<CheckIcon class="mr-3 h-5 w-5 text-light-tertiary" />
-							<span class="text-light-black">Exportar a Excel</span>
+							<CheckIcon class="mr-3 h-5 w-5 text-light-tertiary dark:text-dark-tertiary" />
+							<span class="text-light-black dark:text-dark-white">Exportar a Excel</span>
 						</li>
 					</ul>
 					<Button variant="outline" fullWidth onclick={navigateToLogin}>Comenzar Gratis</Button>
@@ -326,7 +358,7 @@
 			</div>
 
 			<div class="mb-12 grid gap-8 md:grid-cols-2">
-				<div class="rounded-xl border border-light-four p-6">
+				<div class="rounded-xl border border-light-four p-6 dark:border-dark-four">
 					<h4 class="mb-3 text-xl font-bold text-light-black dark:text-dark-white">
 						Nuestra Misión
 					</h4>
@@ -336,7 +368,7 @@
 						nuestros clientes.
 					</p>
 				</div>
-				<div class="rounded-xl border border-light-four p-6">
+				<div class="rounded-xl border border-light-four p-6 dark:border-dark-four">
 					<h4 class="mb-3 text-xl font-bold text-light-black dark:text-dark-white">
 						Nuestra Visión
 					</h4>
@@ -351,7 +383,7 @@
 
 	<!-- CTA Section -->
 	<section
-		class="bg-gradient-to-r from-light-tertiary_d to-light-four_d px-4 py-20 sm:px-6 lg:px-8 dark:from-dark-tertiary_d dark:to-dark-four_d"
+		class="bg-gradient-to-r from-light-tertiary_d to-light-tertiary px-4 py-20 sm:px-6 lg:px-8 dark:from-dark-tertiary_d dark:to-dark-tertiary"
 	>
 		<div class="mx-auto max-w-4xl text-center">
 			<h2 class="mb-6 text-4xl font-bold text-light-primary dark:text-dark-primary">
@@ -361,8 +393,8 @@
 				Únete a miles de usuarios que ya confían en nuestra plataforma
 			</p>
 			<button
-				on:click={navigateToLogin}
-				class="rounded-lg bg-light-primary px-8 py-4 text-lg font-medium text-light-secondary shadow-xl transition-colors hover:bg-light-primary_d dark:text-dark-secondary dark:hover:bg-dark-primary_d"
+				onclick={navigateToLogin}
+				class="rounded-lg bg-light-primary px-8 py-4 text-lg font-medium text-light-secondary shadow-xl transition-colors hover:bg-light-primary_d dark:bg-dark-primary dark:text-dark-secondary dark:hover:bg-dark-primary_d"
 			>
 				Crear Cuenta Gratis
 			</button>
@@ -371,7 +403,7 @@
 
 	<!-- Footer -->
 	<footer
-		class="bg-gradient-to-r from-light-tertiary_d to-light-four_d px-4 py-12 text-white sm:px-6 lg:px-8 dark:from-dark-tertiary_d dark:to-dark-four_d"
+		class="bg-gradient-to-r from-light-tertiary_d to-light-tertiary px-4 py-12 sm:px-6 lg:px-8 dark:from-dark-tertiary_d dark:to-dark-tertiary"
 	>
 		<div class="mx-auto max-w-7xl">
 			<div class="mb-8 grid gap-8 md:grid-cols-4">

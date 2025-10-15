@@ -114,7 +114,7 @@
 					<p class="mb-4 text-light-black dark:text-dark-white">
 						Arrastra y suelta tus archivos aquí o haz clic para seleccionar
 					</p>
-					<Button variant="primary" onclick={() => fileInput.click()}>Seleccionar archivos</Button>
+					<Button variant="primary">Seleccionar archivos</Button>
 				</div>
 				<p class="text-sm text-light-black dark:text-dark-white">
 					Formatos soportados: PDF, JPG, JPEG, PNG
