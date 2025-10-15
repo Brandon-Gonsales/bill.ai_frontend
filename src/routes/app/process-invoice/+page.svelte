@@ -2,7 +2,9 @@
 	//page.svelte
 	import FileUploader from '$lib/components/invoice/fileUploader.svelte';
 	import TemplateUploader from '$lib/components/invoice/templateUploader.svelte';
+	import { Button } from '$lib/components/ui';
 	import Modal from '$lib/components/ui/modal.svelte';
+	import FileTextIcon from '$lib/icons/outline/fileTextIcon.svelte';
 	import { apiService } from '$lib/services/apiService.service';
 	import { addProcessedFile } from '$lib/stores/processedFilesStore';
 	import { templateStore } from '$lib/stores/templateStore';
@@ -128,30 +130,34 @@
 	on:cancel={handleModalCancel}
 />
 
-<div class="min-h-screen bg-white">
+<div class="min-h-screen">
 	<main class="mx-auto max-w-4xl px-4 py-8">
 		{#if !processedFileUrl}
 			<!-- Estado inicial: Subir archivos -->
 			<div class="space-y-6">
 				<!-- Template Uploader (colapsible) -->
-				<div class="rounded-lg border border-gray-200 bg-gray-50">
+				<div class="rounded-lg border border-light-four dark:border-dark-four">
 					<button
-						class="flex w-full items-center justify-between rounded-lg px-4 py-3 text-left transition-colors hover:bg-gray-100"
+						class="flex w-full items-center justify-between rounded-lg px-4 py-3 text-left transition-colors hover:bg-light-four_d dark:hover:bg-dark-four_d"
 						on:click={() => (showTemplateUploader = !showTemplateUploader)}
 					>
 						<div class="flex items-center gap-3">
-							<span class="text-lg">📋</span>
-							<span class="font-medium text-gray-700">Configurar plantilla Excel (opcional)</span>
+							<span class="size-6 text-lg text-light-black dark:text-dark-white"
+								><FileTextIcon /></span
+							>
+							<span class="font-medium text-light-black dark:text-dark-white"
+								>Configurar plantilla Excel (opcional)</span
+							>
 							{#if $templateStore.campos_detectados.length > 0}
 								<span
-									class="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700"
+									class="rounded-full px-2 py-1 text-xs font-medium text-light-success dark:text-dark-success"
 								>
 									✓ Cargada
 								</span>
 							{/if}
 						</div>
 						<span
-							class="transform text-gray-400 transition-transform {showTemplateUploader
+							class="transform text-light-tertiary transition-transform dark:text-dark-tertiary {showTemplateUploader
 								? 'rotate-180'
 								: ''}"
 						>
@@ -167,53 +173,29 @@
 				</div>
 
 				<!-- Main Upload Area -->
-				<div class="rounded-xl border-2 border-dashed border-gray-300 bg-white">
+				<div class="rounded-xl border-2 border-dashed border-light-four dark:border-dark-four">
 					<FileUploader on:filesSelected={(e) => handleFilesSelected(e.detail)} {selectedFiles} />
 				</div>
 
 				{#if selectedFiles.length > 0}
 					<!-- Configuration Panel -->
-					<div class="rounded-lg border border-gray-200 bg-white p-6">
-						<h3 class="mb-4 text-lg font-medium text-gray-900">Configuración del procesamiento</h3>
-						<div class="flex gap-3 pt-4">
-							<button
-								on:click={processInvoices}
+					<div class="p-6">
+						<h3 class="mb-4 text-lg font-medium text-light-black dark:text-dark-white">
+							Configuración del procesamiento
+						</h3>
+						<div class="flex justify-between gap-3 pt-4">
+							<Button
+								onclick={processInvoices}
 								disabled={isProcessing}
-								class="flex flex-1 items-center justify-center gap-2 rounded-lg bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-gray-400"
+								variant="primary"
+								loading={isProcessing}
+								fullWidth
 							>
-								{#if isProcessing}
-									<svg
-										class="h-5 w-5 animate-spin"
-										xmlns="http://www.w3.org/2000/svg"
-										fill="none"
-										viewBox="0 0 24 24"
-									>
-										<circle
-											class="opacity-25"
-											cx="12"
-											cy="12"
-											r="10"
-											stroke="currentColor"
-											stroke-width="4"
-										></circle>
-										<path
-											class="opacity-75"
-											fill="currentColor"
-											d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-										></path>
-									</svg>
-									Procesando facturas...
-								{:else}
-									Procesar facturas
-								{/if}
-							</button>
-							<button
-								on:click={startOver}
-								disabled={isProcessing}
-								class="rounded-lg border border-gray-300 px-6 py-3 text-gray-700 transition-colors hover:bg-gray-50"
-							>
+								Procesar facturas
+							</Button>
+							<Button onclick={startOver} disabled={isProcessing} variant="secondary">
 								Limpiar
-							</button>
+							</Button>
 						</div>
 					</div>
 				{/if}
@@ -221,34 +203,28 @@
 		{:else}
 			<!-- Estado: Archivo procesado -->
 			<div class="space-y-6 text-center">
-				<div class="rounded-lg border border-green-200 bg-green-50 p-8">
+				<div class="rounded-lg border border-light-success p-8 dark:border-dark-success">
 					<div class="mb-4 text-6xl">✅</div>
-					<h2 class="mb-2 text-2xl font-bold text-gray-900">¡Facturas procesadas!</h2>
-					<p class="text-gray-600">Tu archivo está listo para descargar</p>
+					<h2 class="mb-2 text-2xl font-bold text-light-black dark:text-dark-white">
+						¡Facturas procesadas!
+					</h2>
+					<p class="text-light-black dark:text-dark-white">Tu archivo está listo para descargar</p>
 				</div>
 
-				<div class="rounded-lg border border-gray-200 bg-white p-6">
+				<div class="rounded-lg border border-light-four p-6 dark:border-dark-four">
 					<div class="mb-4 flex items-center justify-center gap-4">
 						<span class="text-3xl">📊</span>
 						<div class="text-left">
-							<h3 class="font-medium text-gray-900">{processedFileName}</h3>
-							<p class="text-sm text-gray-500">Archivo Excel procesado</p>
+							<h3 class="font-medium text-light-black dark:text-dark-white">{processedFileName}</h3>
+							<p class="text-sm text-light-black dark:text-dark-white">Archivo Excel procesado</p>
 						</div>
 					</div>
 
 					<div class="flex justify-center gap-3">
-						<button
-							on:click={downloadProcessedFile}
-							class="rounded-lg bg-red-600 px-8 py-3 font-medium text-white transition-colors hover:bg-red-700"
-						>
+						<Button onclick={downloadProcessedFile} variant="primary" fullWidth>
 							Descargar archivo
-						</button>
-						<button
-							on:click={startOver}
-							class="rounded-lg border border-gray-300 px-8 py-3 text-gray-700 transition-colors hover:bg-gray-50"
-						>
-							Procesar más facturas
-						</button>
+						</Button>
+						<Button onclick={startOver} variant="secondary" fullWidth>Procesar más facturas</Button>
 					</div>
 				</div>
 			</div>

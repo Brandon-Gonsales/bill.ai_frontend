@@ -5,6 +5,7 @@
 	import { apiService } from '$lib/services/apiService.service';
 	import { alert } from '$lib/utils/alert';
 	import { templateStore } from '$lib/stores/templateStore';
+	import { Button } from '../ui';
 
 	const dispatch = createEventDispatcher<{
 		templateUploaded: void;
@@ -50,11 +51,13 @@
 	};
 </script>
 
-<div class="bg-white p-4">
+<div class="p-4">
 	<div class="mb-4 flex items-center justify-between">
 		<div>
-			<h4 class="font-medium text-gray-900">Plantilla Excel</h4>
-			<p class="text-sm text-gray-600">Define los campos que quieres extraer</p>
+			<h4 class="font-medium text-light-black dark:text-dark-white">Plantilla Excel</h4>
+			<p class="text-sm text-light-black dark:text-dark-white">
+				Define los campos que quieres extraer
+			</p>
 		</div>
 
 		<input
@@ -65,31 +68,28 @@
 			class="hidden"
 		/>
 
-		<button
-			on:click={() => fileInput.click()}
+		<Button
+			onclick={() => fileInput.click()}
 			disabled={isUploading}
-			class="rounded-lg bg-gray-800 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-900 disabled:bg-gray-400"
+			variant="secondary"
+			loading={isUploading}
 		>
-			{#if isUploading}
-				Cargando...
-			{:else}
-				Subir plantilla
-			{/if}
-		</button>
+			Subir plantilla
+		</Button>
 	</div>
 
 	{#if $templateStore.campos_detectados.length > 0}
-		<div class="rounded-lg border border-green-200 bg-green-50 p-3">
-			<p class="mb-2 text-sm font-medium text-green-800">
+		<div class="rounded-lg border border-light-success p-3 dark:border-dark-success">
+			<p class="mb-2 text-sm font-medium text-light-success dark:text-dark-success">
 				✅ {$templateStore.message}
 			</p>
 
 			{#if $templateStore.campos_detectados.length > 0}
 				<div>
-					<p class="mb-2 text-xs text-green-700">Campos detectados:</p>
+					<p class="mb-2 text-xs text-light-success dark:text-dark-success">Campos detectados:</p>
 					<div class="flex flex-wrap gap-1">
 						{#each $templateStore.campos_detectados as campo}
-							<span class="rounded bg-green-100 px-2 py-1 text-xs text-green-800">
+							<span class="rounded px-2 py-1 text-xs text-light-success dark:text-dark-success">
 								{campo}
 							</span>
 						{/each}

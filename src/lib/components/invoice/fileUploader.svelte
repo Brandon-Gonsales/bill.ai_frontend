@@ -1,6 +1,10 @@
 <script lang="ts">
+	import BuildindStoreIcon from '$lib/icons/outline/buildindStoreIcon.svelte';
+
 	//fileUploader.svelte
 	import { createEventDispatcher } from 'svelte';
+	import { Button } from '../ui';
+	import FileTextIcon from '$lib/icons/outline/fileTextIcon.svelte';
 
 	export let selectedFiles: File[] = [];
 
@@ -81,9 +85,7 @@
 	{#if selectedFiles.length === 0}
 		<!-- Empty State -->
 		<div
-			class="py-16 text-center transition-colors duration-200 {isDragOver
-				? 'bg-red-50'
-				: 'hover:bg-gray-50'}"
+			class="py-16 text-center transition-colors duration-200 {isDragOver ? '' : ''}"
 			on:drop={handleDrop}
 			on:dragover={handleDragOver}
 			on:dragleave={handleDragLeave}
@@ -101,20 +103,22 @@
 				class="hidden"
 			/>
 
-			<div class="space-y-4">
-				<div class="text-6xl">📄</div>
+			<div class="flex flex-col space-y-4">
+				<div class="mx-auto">
+					<FileTextIcon class="size-12 text-light-four dark:text-dark-four" />
+				</div>
 				<div>
-					<h3 class="mb-2 text-xl font-semibold text-gray-900">Selecciona tus facturas</h3>
-					<p class="mb-4 text-gray-600">
+					<h3 class="mb-2 text-xl font-semibold text-light-black dark:text-dark-white">
+						Selecciona tus facturas
+					</h3>
+					<p class="mb-4 text-light-black dark:text-dark-white">
 						Arrastra y suelta tus archivos aquí o haz clic para seleccionar
 					</p>
-					<button
-						class="rounded-lg bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
-					>
-						Seleccionar archivos
-					</button>
+					<Button variant="primary" onclick={() => fileInput.click()}>Seleccionar archivos</Button>
 				</div>
-				<p class="text-sm text-gray-500">Formatos soportados: PDF, JPG, JPEG, PNG</p>
+				<p class="text-sm text-light-black dark:text-dark-white">
+					Formatos soportados: PDF, JPG, JPEG, PNG
+				</p>
 			</div>
 		</div>
 	{:else}
@@ -122,18 +126,13 @@
 		<div class="space-y-6">
 			<div class="text-center">
 				<div class="mb-3 text-4xl">📁</div>
-				<h3 class="mb-2 text-xl font-semibold text-gray-900">
+				<h3 class="mb-2 text-xl font-semibold text-light-black dark:text-dark-white">
 					{selectedFiles.length} archivo{selectedFiles.length > 1 ? 's' : ''} seleccionado{selectedFiles.length >
 					1
 						? 's'
 						: ''}
 				</h3>
-				<button
-					on:click={() => fileInput.click()}
-					class="font-medium text-red-600 hover:text-red-700"
-				>
-					Agregar más archivos
-				</button>
+				<Button onclick={() => fileInput.click()} variant="outline">Agregar más archivos</Button>
 				<input
 					bind:this={fileInput}
 					type="file"
@@ -147,10 +146,10 @@
 			<!-- Files Grid -->
 			<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 				{#each selectedFiles as file, index}
-					<div class="group relative rounded-lg border border-gray-200 bg-gray-50 p-4">
+					<div class="group relative rounded-lg border border-light-four p-4 dark:border-dark-four">
 						<button
 							on:click={() => removeFile(index)}
-							class="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-red-500 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-red-600"
+							class="d absolute -top-2 -right-2 h-6 w-6 rounded-full bg-red-500 text-xs text-light-primary opacity-0 transition-opacity group-hover:opacity-100 hover:bg-red-600"
 						>
 							×
 						</button>
@@ -165,10 +164,13 @@
 									📁
 								{/if}
 							</div>
-							<h4 class="mb-1 truncate text-sm font-medium text-gray-900" title={file.name}>
+							<h4
+								class="mb-1 truncate text-sm font-medium text-light-black dark:text-dark-white"
+								title={file.name}
+							>
 								{file.name}
 							</h4>
-							<p class="text-xs text-gray-500">
+							<p class="text-xs text-light-black dark:text-dark-white">
 								{formatFileSize(file.size)}
 							</p>
 						</div>
