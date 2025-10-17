@@ -15,27 +15,28 @@
 	let isLoading = false;
 
 	async function handleSubmit() {
-		if (!username || !password) {
-			errorMessage = 'Por favor completa todos los campos';
-			return;
-		}
+		console.log(username, password);
+		// if (!username || !password) {
+		// 	errorMessage = 'Por favor completa todos los campos';
+		// 	return;
+		// }
 
-		isLoading = true;
-		errorMessage = '';
+		// isLoading = true;
+		// errorMessage = '';
 
-		try {
-			const result = authService.signIn(username, password);
+		// try {
+		// 	const result = authService.signIn(username, password);
 
-			if (result.success) {
-				goto('/app/process-invoice');
-			} else {
-				errorMessage = result.error ?? 'Credenciales incorrectas';
-			}
-		} catch (error) {
-			errorMessage = 'Error al iniciar sesión';
-		} finally {
-			isLoading = false;
-		}
+		// 	if (result.success) {
+		goto('/app/process-invoice');
+		// 	} else {
+		// 		errorMessage = result.error ?? 'Credenciales incorrectas';
+		// 	}
+		// } catch (error) {
+		// 	errorMessage = 'Error al iniciar sesión';
+		// } finally {
+		// 	isLoading = false;
+		// }
 	}
 
 	function handleKeyPress(event: KeyboardEvent) {
@@ -234,8 +235,9 @@
 					</button>
 				</div>
 
-				<!-- Submit Button -->
-				<Button type="submit" disabled={isLoading} fullWidth {isLoading}>Iniciar Sesión</Button>
+				<Button onclick={handleSubmit} disabled={isLoading} fullWidth {isLoading}
+					>Iniciar Sesión</Button
+				>
 			</form>
 
 			<!-- Sign Up Link -->
