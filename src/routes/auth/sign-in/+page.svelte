@@ -16,27 +16,9 @@
 
 	async function handleSubmit() {
 		console.log(username, password);
-		// if (!username || !password) {
-		// 	errorMessage = 'Por favor completa todos los campos';
-		// 	return;
-		// }
 
-		// isLoading = true;
-		// errorMessage = '';
-
-		// try {
-		// 	const result = authService.signIn(username, password);
-
-		// 	if (result.success) {
 		goto('/app/process-invoice');
-		// 	} else {
-		// 		errorMessage = result.error ?? 'Credenciales incorrectas';
-		// 	}
-		// } catch (error) {
-		// 	errorMessage = 'Error al iniciar sesión';
-		// } finally {
-		// 	isLoading = false;
-		// }
+
 	}
 
 	function handleKeyPress(event: KeyboardEvent) {

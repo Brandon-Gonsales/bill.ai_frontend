@@ -64,8 +64,6 @@
 	--color-dark-black: #000000;
 
 	--animate-wiggle: wiggle 1s ease-in-out infinite;
-
-	--screen-dynamic: '100dvh';
 	@keyframes wiggle {
 		0%,
 		100% {
