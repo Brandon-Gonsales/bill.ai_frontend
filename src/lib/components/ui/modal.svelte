@@ -90,35 +90,52 @@
 					/>
 				</div>
 
-				<!-- 🧩 Toggle Compra/Venta -->
-				<div class="flex items-center justify-between">
-					<div class="flex gap-1">
-						<h2 class="block text-sm text-light-black dark:text-dark-white">Tipo de operación:</h2>
-						<p class="text-sm font-bold text-light-black dark:text-dark-white">
-							Factura <span class=" text-light-black dark:text-dark-white"
-								>{es_compra ? 'compra' : 'venta'}</span
-							>.
-						</p>
-					</div>
+				<!-- Radio Buttons Compra/Venta -->
+				<div>
+					<h2 class="mb-3 block text-sm font-medium text-light-black dark:text-dark-white">
+						Tipo de operación:
+					</h2>
+					<div class="flex gap-4">
+						<!-- Opción Compra -->
+						<label
+							class="flex flex-1 cursor-pointer items-center gap-3 rounded-lg border border-light-four px-4 py-3 transition-all dark:border-dark-four"
+							class:bg-light-tertiary={es_compra}
+							class:border-light-tertiary={es_compra}
+							class:dark:bg-dark-tertiary={es_compra}
+							class:dark:border-dark-tertiary={es_compra}
+						>
+							<input
+								type="radio"
+								name="tipo_operacion"
+								value={true}
+								bind:group={es_compra}
+								class="h-4 w-4 text-light-tertiary focus:ring-2 focus:ring-light-tertiary dark:text-dark-tertiary dark:focus:ring-dark-tertiary"
+							/>
+							<span class="text-sm font-medium text-light-black dark:text-dark-white">
+								Factura compra
+							</span>
+						</label>
 
-					<!-- Toggle Switch -->
-					<button
-						type="button"
-						role="switch"
-						aria-checked={es_compra}
-						on:click={() => (es_compra = !es_compra)}
-						class="relative inline-flex h-6 w-12 items-center rounded-full transition-colors focus:ring-2 focus:ring-light-tertiary focus:ring-offset-2 focus:outline-none dark:focus:ring-dark-tertiary"
-						class:bg-light-tertiary={es_compra}
-						class:bg-light-four={!es_compra}
-						class:bg-dark-tertiary={es_compra}
-						class:bg-dark-four={!es_compra}
-					>
-						<span
-							class="inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform"
-							class:translate-x-6={es_compra}
-							class:translate-x-1={!es_compra}
-						></span>
-					</button>
+						<!-- Opción Venta -->
+						<label
+							class="flex flex-1 cursor-pointer items-center gap-3 rounded-lg border border-light-four px-4 py-3 transition-all dark:border-dark-four"
+							class:bg-light-tertiary={!es_compra}
+							class:border-light-tertiary={!es_compra}
+							class:dark:bg-dark-tertiary={!es_compra}
+							class:dark:border-dark-tertiary={!es_compra}
+						>
+							<input
+								type="radio"
+								name="tipo_operacion"
+								value={false}
+								bind:group={es_compra}
+								class="h-4 w-4 text-light-tertiary focus:ring-2 focus:ring-light-tertiary dark:text-dark-tertiary dark:focus:ring-dark-tertiary"
+							/>
+							<span class="text-sm font-medium text-light-black dark:text-dark-white">
+								Factura venta
+							</span>
+						</label>
+					</div>
 				</div>
 			</div>
 
