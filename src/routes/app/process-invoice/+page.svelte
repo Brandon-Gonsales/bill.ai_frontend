@@ -229,5 +229,8 @@
 				</div>
 			</div>
 		{/if}
+		<div class="mt-4">
+			<Button onclick={startOver} variant="secondary">Descargar facturas fallidas</Button>
+		</div>
 	</main>
 </div>
