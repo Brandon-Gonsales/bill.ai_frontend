@@ -118,6 +118,21 @@
 		userNombre = '';
 		userNit = '';
 	};
+
+	function downloadFailedFiles() {
+		const pdfBase64 =
+			'JVBERi0xLjMKJcfsj6IKMSAwIG9iago8PC9UeXBlIC9DYXRhbG9nL1BhZ2VzIDIgMCBSCj4+CmVuZG9iagoyIDAgb2JqCjw8L1R5cGUgL1BhZ2VzL0tpZHMgWzMgMCBSXS9Db3VudCAxPj4KZW5kb2JqCjMgMCBvYmoKPDwvVHlwZSAvUGFnZS9QYXJlbnQgMiAwIFIvUmVzb3VyY2VzIDw8L0ZvbnQgPDwvRjEgNCAwIFI+PiA+Pi9Db250ZW50cyA1IDAgUj4+CmVuZG9iago0IDAgb2JqCjw8L1R5cGUgL0ZvbnQvU3VidHlwZSAvVHlwZTEvTmFtZSAvRjEvQmFzZUZvbnQgL0hlbHZldGljYT4+CmVuZG9iago1IDAgb2JqCjw8L0xlbmd0aCA2MDA+PgpzdHJlYW0KQlQKL0YxIDEyIFRmCjUwIDcwMCBUZAooRmFjdHVyYSBkZSBlamVtcGxvKSBUagpFVAplbmRzdHJlYW0KZW5kb2JqCnhyZWYKMCA2CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxNyAwMDAwMCBuIAowMDAwMDAwMDYzIDAwMDAwIG4gCjAwMDAwMDAxMTYgMDAwMDAgbiAKMDAwMDAwMDE3NiAwMDAwMCBuIAowMDAwMDAwMzA5IDAwMDAwIG4gCnRyYWlsZXIKPDwvUm9vdCAxIDAgUi9TaXplIDY+PgpzdGFydHhyZWYKNDAxCiUlRU9G';
+
+		// Número de archivos a descargar (simulación)
+		const cantidad = 3;
+
+		for (let i = 1; i <= cantidad; i++) {
+			const link = document.createElement('a');
+			link.href = 'data:application/pdf;base64,' + pdfBase64;
+			link.download = `Factura_${i}.pdf`;
+			link.click();
+		}
+	}
 </script>
 
 <!-- Modal -->
@@ -137,7 +152,7 @@
 			<div class="space-y-6">
 				<!-- Template Uploader (colapsible) -->
 				<div class="rounded-lg border border-light-four dark:border-dark-four">
-					<button
+					<!-- <button
 						class="flex w-full items-center justify-between rounded-lg px-4 py-3 text-left transition-colors hover:bg-light-four_d dark:hover:bg-dark-four_d"
 						on:click={() => (showTemplateUploader = !showTemplateUploader)}
 					>
@@ -163,13 +178,13 @@
 						>
 							▼
 						</span>
-					</button>
+					</button> -->
 
-					{#if showTemplateUploader}
-						<div class="px-4 pb-4">
-							<TemplateUploader on:templateUploaded={handleTemplateUploaded} />
-						</div>
-					{/if}
+					<!-- {#if showTemplateUploader} -->
+					<div>
+						<TemplateUploader on:templateUploaded={handleTemplateUploaded} />
+					</div>
+					<!-- {/if} -->
 				</div>
 
 				<!-- Main Upload Area -->
@@ -179,7 +194,7 @@
 
 				{#if selectedFiles.length > 0}
 					<!-- Configuration Panel -->
-					<div class="p-6">
+					<div class="p-4">
 						<h3 class="mb-4 text-lg font-medium text-light-black dark:text-dark-white">
 							Configuración del procesamiento
 						</h3>
@@ -211,7 +226,7 @@
 					<p class="text-light-black dark:text-dark-white">Tu archivo está listo para descargar</p>
 				</div>
 
-				<div class="rounded-lg border border-light-four p-6 dark:border-dark-four">
+				<div class="rounded-lg border border-light-four p-4 dark:border-dark-four">
 					<div class="mb-4 flex items-center justify-center gap-4">
 						<span class="text-3xl">📊</span>
 						<div class="text-left">
@@ -230,7 +245,7 @@
 			</div>
 		{/if}
 		<div class="mt-4">
-			<Button onclick={startOver} variant="secondary">Descargar facturas fallidas</Button>
+			<Button onclick={downloadFailedFiles} variant="outline">Descargar facturas fallidas</Button>
 		</div>
 	</main>
 </div>

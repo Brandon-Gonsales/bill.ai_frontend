@@ -33,6 +33,7 @@
 		isUploading = true;
 		try {
 			const result = await apiService.uploadTemplate(file);
+			//	console.log('result: ', result);
 			templateStore.setTemplateData(result);
 			alert('success', `${result.message}`);
 			// Emitir evento de template cargado exitosamente
@@ -52,9 +53,11 @@
 </script>
 
 <div class="p-4">
-	<div class="mb-4 flex items-center justify-between">
+	<div class="flex items-center justify-between">
 		<div>
-			<h4 class="font-medium text-light-black dark:text-dark-white">Plantilla Excel</h4>
+			<h4 class="font-medium text-light-black dark:text-dark-white">
+				Plantilla Excel <span class="font-normal">(opcional)</span>
+			</h4>
 			<p class="text-sm text-light-black dark:text-dark-white">
 				Define los campos que quieres extraer
 			</p>

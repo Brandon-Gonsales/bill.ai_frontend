@@ -1,7 +1,4 @@
 <script lang="ts">
-	import BuildindStoreIcon from '$lib/icons/outline/buildindStoreIcon.svelte';
-
-	//fileUploader.svelte
 	import { createEventDispatcher } from 'svelte';
 	import { Button } from '../ui';
 	import FileTextIcon from '$lib/icons/outline/fileTextIcon.svelte';
@@ -81,7 +78,7 @@
 	};
 </script>
 
-<div class="p-8">
+<div class="p-4">
 	{#if selectedFiles.length === 0}
 		<!-- Empty State -->
 		<div
@@ -144,7 +141,7 @@
 			</div>
 
 			<!-- Files Grid -->
-			<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+			<div class="flex flex-wrap justify-center gap-4">
 				{#each selectedFiles as file, index}
 					<div class="group relative rounded-lg border border-light-four p-4 dark:border-dark-four">
 						<button
